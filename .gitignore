@@ -1,5 +1,5 @@
 .gitattributes
-.set_env_vars.sh
+.set_env_vars
 .env
 img_ffmpeg.txt
 vid_ffmpeg.txt
