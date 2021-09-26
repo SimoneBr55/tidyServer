@@ -1,0 +1,19 @@
+# To use in dailyPhoto.sh
+dailyPhoto_py_path=("") #Path of dailyPhoto.py
+ffmpeg_creator_path=("") #Path of ffmpeg_creator.sh
+path_to_allow1=("") #Path to change ownership and access to get used by webserver (in this case, daily clip files)
+path_to_allow2=("") ##Path to change ownership and access to get used by webserver (in this case, root directory of photolibrary)
+
+# To use in ffmpeg_creator.sh
+dailyphoto_mp4=("") #Path in which you want to store the dailyphoto.mp4 videoclip
+dailyvideo_mp4=("") #Path in which you want to store the dailyvideo.mp4 videoclip
+img_ffmpeg_txt=("") #Path to store image paths temporarily, to use with ffmpeg
+vid_ffmpeg_txt=("") #Path to store video paths temporarily, to use with ffmpeg
+
+# To use in weekly_update.sh
+hash_checker_py=("") #Path to hash_checker.py
+sort_misc_py=("") #Path to sort_misc.py
+sort_noname_py=("") #Path to sort_noname.py
+
+# To use in monthly_update.sh
+hash_start_py=("") #Path to hash_start.py
