@@ -1,24 +1,11 @@
 # hash_checker (brute version)
-# Version 2.0
+# Version 3.0
 
-import hashlib, os
+import lib.hash as hash_ut #this is to prevent variable with same name...
+import os
+import lib.create_tree as create_tree
 # import environment variables
 from decouple import config
-
-def get_hash(full_path):
-    return hash_bytestr_iter(file_as_blockiter(open(full_path, 'rb')), hashlib.md5(), True)
-
-def hash_bytestr_iter(bytesiter, hasher, ashexstr=False):
-    for block in bytesiter:
-        hasher.update(block)
-    return hasher.hexdigest() if ashexstr else hasher.digest()
-
-def file_as_blockiter(afile, blocksize=65536):
-    with afile:
-        block = afile.read(blocksize)
-        while len(block) > 0:
-            yield block
-            block = afile.read(blocksize)
 
 path = config('import_path')
 discarded_path  = config('discarded_path')
@@ -31,7 +18,10 @@ discarded = []
 discarded_name = []
 saved = []
 saved_name = []
+save_hash = []
 
+files, filesnames = create_tree.create_tree(path)
+'''imported above as create_tree.create_tree
 for root, d_names, f_names in os.walk(path):
     for f in f_names:
         # if f.endswith(im_extensions):
@@ -42,25 +32,26 @@ for root, d_names, f_names in os.walk(path):
         #     vid_files_names.append(f)
         files.append(os.path.join(root,f))
         filesnames.append(os.path.join(f))
-
+'''
 with open(config('hash_files_dict'),'r') as hashes:
     #hash_files = hashes.readlines()
     hash_files = hashes.read().splitlines()
 
 
-## check new images
+## check new images - this is slow but since there are not a lot of new images, it is still acceptable
 for image,name in zip(files, filesnames):
     it_exists = 0
     print(image)
-    hash_image = get_hash(image)
+    hash_image = hash_ut.get_hash(image)
     for hash in hash_files:
         if hash == hash_image:
             discarded.append(image)
             discarded_name.append(name)
             it_exists = 1
         else:
-            continue
+            pass
     if it_exists == 0:
+	save_hash(hash_image)
         saved.append(image)
         saved_name.append(name)
 
@@ -75,10 +66,11 @@ for discard, name in zip(discarded, discarded_name):
 for save, name in zip(saved, saved_name):
     print(save, name)
     os.rename(save, os.path.join(saved_path,name))
-
-with open(config('hash_files_dict'), "a") as hashes:
-    with open(config('hash_file_names_dict'),"a") as hashes_names:
-        for save, name in zip(saved, saved_name):
+path_hash_files = config('hash_files_dict')
+path_hash_names = config('hash_files_names_dict')
+with open(path_hash_files, "a") as hashes:
+    with open(path_hash_names,"a") as hashes_names:
+        for saving, name in zip(save_hash, saved_name):
             nameline = os.path.join(saved_path, name)
-            hashes.writelines(save+"\n")
+            hashes.writelines(saving+"\n")
             hashes_names.writelines(nameline+"\n")

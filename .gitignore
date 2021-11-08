@@ -1,7 +1,11 @@
 .gitattributes
 .set_env_vars
 .env
+test/*
 img_ffmpeg.txt
 vid_ffmpeg.txt
 hash_files.dict
 hash_files_names.dict
+start_fresh
+./lib/__pycache__
+oldScripts
